@@ -40,7 +40,7 @@ jobs:
     - name: Docker Run
       env:
          CONTAINER_REGISTRY: docker.io
-        DOCKER_USERNAME: jamesafful25
-        DOCKER_PASSWORD: Mankind9042@
-        IMAGE_NAME: resume-app
-      run: docker run -d -p 8080:80 $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
+         DOCKER_USERNAME: jamesafful25
+         DOCKER_PASSWORD: Mankind9042@
+         IMAGE_NAME: resume-app
+    run: docker run -d -p 8080:80 $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
