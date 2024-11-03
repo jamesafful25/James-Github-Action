@@ -2,45 +2,30 @@ name: Docker Workflow
 
 on:
   - push
-
+  
 jobs: 
-  docker: 
+  docker_build: 
     runs-on: ubuntu-latest
-    steps:
+    steps: 
     - name: Checkout Code
       uses: actions/checkout@v4
-    - name: Docker Build
-      env:
-        CONTAINER_REGISTRY: docker.io
-        DOCKER_USERNAME: jamesafful25
-        DOCKER_PASSWORD: Mankind9042@
-        IMAGE_NAME: resume-app
-      run: echo docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest .
-      # run: echo docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: Docker Build 
+      run: docker build -t docker.io/jamesafful25/resume-app:latest .
 
     - name: Docker Login
-      env:
-        DOCKER_USERNAME: jamesafful25
-        DOCKER_PASSWORD: Mankind9042@
-      run: docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD
+      run: docker login --username=jamesafful --password=Mankind9042@
 
     - name: Docker Publish 
-      env:
-        CONTAINER_REGISTRY: docker.io
-        DOCKER_USERNAME: jamesafful25
-        IMAGE_NAME: resume-app
-      run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
+      run: docker push docker.io/jamesafful25/resume-app:latest
 
-  deploy:
-  needs: docker
-  runs-on: ubuntu-latest 
-  steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-    - name: Docker Run
-      env:
-         CONTAINER_REGISTRY: docker.io
-         DOCKER_USERNAME: jamesafful25
-         DOCKER_PASSWORD: Mankind9042@
-         IMAGE_NAME: resume-app
-    run: docker run -d -p 8080:80 $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:latest
+  docker_deploy:
+    needs: docker_build
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Docker Login
+        run: docker login --username=jamesafful25 --password=Mankind9042@
+      - name: Docker Run
+        run: docker run -d -p 8080:80 docker.io/efotsowoe/resume-app:latest
