@@ -14,7 +14,7 @@ jobs:
       run: docker build -t docker.io/jamesafful25/resume-app:latest .
 
     - name: Docker Login
-      run: docker login --username=jamesafful --password=Mankind9042@
+      run: docker login --username=jamesafful25 --password=Mankind9042@
 
     - name: Docker Publish 
       run: docker push docker.io/jamesafful25/resume-app:latest
