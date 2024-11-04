@@ -1,28 +1,10 @@
 name: Docker Workflow
 
 on:
-<<<<<<< HEAD
   push:
    branches: main
   workflow_dispatch: 
 
-=======
-  # push:
-  # branches:
-  #   - demo
-  # paths:          
-  #   - css/**
-  #   - images/**
-  #   - index.html
-  #   - dockerfile
-  #pull_request:
-  # types:
-  #   - opened
-  #    - closed
-  workflow_dispatch:
-  schedule: 
-    - cron: "*/1 * * * *"  
->>>>>>> 9eece7d4984e60aa6c8ba6be1f7b6232a4bd27e9
 env:
     CONTAINER_REGISTRY: docker.io
     IMAGE_NAME: resume
