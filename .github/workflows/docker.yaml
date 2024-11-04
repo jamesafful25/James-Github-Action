@@ -9,6 +9,7 @@ on:
       - images/**
       - index.html
       - dockerfile
+  workflow_dispatch:
 
 env:
     CONTAINER_REGISTRY: docker.io
