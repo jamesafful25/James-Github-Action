@@ -1,33 +1,39 @@
-name: Matrix Configuration
+name: Docker Workflow
 
 on:
-  push: 
-  workflow_dispatch:
+  push:
+
+env:
+  CONTAINER_REGISTRY: docker.io
+  IMAGE_NAME: resume
 
 jobs: 
-  deploy:
-    environment: staging
-    strategy: 
-      fail-fast: false 
-      max-parallel: 3 
-      matrix: 
-        os: [ubuntu-latest, ubuntu-20.04, windows-latest]
-        images: [hello-world, alpine]
-        exclude: 
-          - images: alpine
-            os: windows-latest
-        include: 
-          - images: amd64/alpine
-            os: ubuntu-20.04
-
-    runs-on: ${{ matrix.os }}
-
+  docker: 
+    runs-on: ubuntu-latest
     steps: 
-      - name: Echo Docker Details
-        run: docker info
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - name: Run Images on ${{ matrix.os }}
-        run: docker run ${{ matrix.images }}
+      - name: Docker Build
+        run: docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest .
 
+      - name: Docker Login
+        run: docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
 
- 
+      - name: Docker Publish 
+        run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: docker
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Docker Login
+        run: docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+    
+      - name: Docker Deploy
+        timeout-minutes: 1
+        run: |
+          docker run -d -p 8080:80 ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          sleep 300s
+#**********
