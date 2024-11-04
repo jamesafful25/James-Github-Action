@@ -2,15 +2,15 @@ name: Docker Workflow
 
 on:
   workflow_dispatch: 
-  # schedule: 
-  # - cron: "*/1 * * * *"
+  push:
+    branches: [main]
 
 env:
   CONTAINER_REGISTRY: docker.io
   IMAGE_NAME: resume
 
 jobs: 
-  docker: 
+  docker_build: 
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout Code
@@ -25,8 +25,8 @@ jobs:
       - name: Docker Publish 
         run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
 
-  deploy:
-    needs: docker
+  docker_deploy:
+    needs: docker_build
     concurrency: 
       group: production-deployment
       cancel-in-progress: true
