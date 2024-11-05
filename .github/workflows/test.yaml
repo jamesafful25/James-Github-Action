@@ -7,34 +7,34 @@ on:
       - main
 
 jobs:
-    unit-testing:
-        name: Unit Testing
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-        - name: Setup NodeJS Version
-          uses: actions/setup-node@v3
-          with:
-            node-version: 16
+      - name: Setup NodeJS Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14  # or 16 if using Dart Sass
 
-        - name: Install Build Tools
-          run: sudo apt-get install -y build-essential
+      - name: Install Build Tools
+        run: sudo apt-get install -y build-essential
 
-        - name: Clean npm Cache
-          run: npm cache clean --force
+      - name: Clean npm Cache
+        run: npm cache clean --force
 
-        - name: Install Dependencies
-          run: npm install --legacy-peer-deps
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
 
-        - name: Unit Testing
-          run: npm test
-          
-        - name: Archive Test Result
-          uses: actions/upload-artifact@v3
-          with:
-            name: Mocha-Test-Result
-            path: test-results.xml
+      - name: Unit Testing
+        run: npm test
+        
+      - name: Archive Test Result
+        uses: actions/upload-artifact@v3
+        with:
+          name: Mocha-Test-Result
+          path: test-results.xml
 
    
