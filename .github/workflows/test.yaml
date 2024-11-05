@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
     unit-testing:
         name: Unit Testing
@@ -17,9 +18,9 @@ jobs:
           uses: actions/setup-node@v3
           with:
             node-version: 20
-    
+
         - name: Install Dependencies
-          run: npm install
+          run: npm install --legacy-peer-deps
     
         - name: Unit Testing
           run: npm test
@@ -29,6 +30,3 @@ jobs:
           with:
             name: Mocha-Test-Result
             path: test-results.xml
-#*******************
-        
-            
