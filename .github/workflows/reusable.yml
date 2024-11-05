@@ -1,4 +1,4 @@
-name: Deploy to Various Environments
+name: Deploy to various Environments
 
 on:
   push:
@@ -7,18 +7,21 @@ on:
 
 jobs:
   deploy_dev:
-    uses: my-org/reusable-workflows/.github/workflows/deploy.yml@main
+    uses: jamesafful25/reusable-workflows/.github/workflows/deploy.yml@main
     with:
       environment: dev
 
   deploy_staging:
     needs: deploy_dev
-    uses: my-org/reusable-workflows/.github/workflows/deploy.yml@main
+    uses: jamesafful25/reusable-workflows/.github/workflows/deploy.yml@main
     with:
       environment: staging
 
   deploy_prod:
     needs: deploy_staging
-    uses: my-org/reusable
+    uses: jamesafful25/reusable-workflows/.github/workflows/deploy.yml@main
+    with:
+      environment: production
+
 
 
