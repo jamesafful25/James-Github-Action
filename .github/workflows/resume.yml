@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout the files
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'  # Use if your repo has submodules
 
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
@@ -21,7 +23,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.EC2_USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}  # Ensure this points to the correct directory
+          TARGET: ${{ secrets.TARGET_DIR }}  # Make sure this points to where you want to deploy
 
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
@@ -30,20 +32,21 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Update and install apache2 if not already installed
+            # Update the package list and install Apache if not installed
             sudo apt-get -y update
             sudo apt-get install -y apache2
             sudo systemctl start apache2
             sudo systemctl enable apache2
-            
-            # Change to the directory where your files are located
-            cd /path/to/resume-app  # Adjust this to your actual directory path
-            
-            # Clear the previous contents of the web root
+
+            # Remove existing contents of /var/www/html
             sudo rm -rf /var/www/html/*
-            
-            # Move new files to the Apache web root
-            sudo mv * /var/www/html/
-            
-            # Verify files have been moved correctly
-            ls -l /var/www/html/
+
+            # Move new files from the target directory to /var/www/html
+            sudo mv ${TARGET}/* /var/www/html
+
+            # Ensure proper ownership and permissions
+            sudo chown -R www-data:www-data /var/www/html
+            sudo chmod -R 755 /var/www/html
+
+            # Restart Apache to apply changes
+            sudo systemctl restart apache2
