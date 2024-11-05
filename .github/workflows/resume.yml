@@ -21,7 +21,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.EC2_USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+          TARGET: ${{ secrets.TARGET_DIR }}  # Ensure this is the correct target directory
 
       - name: Executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
@@ -35,8 +35,11 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl start apache2
             sudo systemctl enable apache2
-            cd home
+            # Change to the home directory of the user
+            cd /home/${{ secrets.EC2_USER }}
             # Remove existing contents of /var/www/html
             sudo rm -rf /var/www/html/*
             # Move new files to /var/www/html
-            sudo mv * /var/www/html
+            sudo mv ${TARGET}/* /var/www/html/  # Ensure TARGET is correct
+            # Check the status of Apache
+            sudo systemctl status apache2
