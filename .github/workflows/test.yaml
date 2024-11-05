@@ -17,11 +17,17 @@ jobs:
         - name: Setup NodeJS Version
           uses: actions/setup-node@v3
           with:
-            node-version: 16  # Downgraded Node version for compatibility
-    
+            node-version: 16
+
+        - name: Install Build Tools
+          run: sudo apt-get install -y build-essential
+
+        - name: Clean npm Cache
+          run: npm cache clean --force
+
         - name: Install Dependencies
           run: npm install --legacy-peer-deps
-    
+
         - name: Unit Testing
           run: npm test
           
@@ -30,3 +36,5 @@ jobs:
           with:
             name: Mocha-Test-Result
             path: test-results.xml
+
+   
