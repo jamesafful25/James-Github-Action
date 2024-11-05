@@ -1,22 +1,24 @@
-name: Deploy Workflow
+name: Deploy to Various Environments
 
 on:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-        default: 'production'
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy_dev:
+    uses: my-org/reusable-workflows/.github/workflows/deploy.yml@main
+    with:
+      environment: dev
 
-    steps:
-      - name: Check Out Code
-        uses: actions/checkout@v4
+  deploy_staging:
+    needs: deploy_dev
+    uses: my-org/reusable-workflows/.github/workflows/deploy.yml@main
+    with:
+      environment: staging
 
-      - name: Deploy Application
-        run: |
-          echo "Deploying to ${{ inputs.environment }} environment"
-#******
+  deploy_prod:
+    needs: deploy_staging
+    uses: my-org/reusable
+
+
