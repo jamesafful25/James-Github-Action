@@ -33,12 +33,5 @@ jobs:
       - name: Docker Login
         run: docker login --username=${{ vars.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
 
-<<<<<<< HEAD
  
         
-=======
-      - name: Docker Publish 
-        run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
- 
->>>>>>> 078234761fea43d1f6fd9f97d67baaa0f36cbf05
