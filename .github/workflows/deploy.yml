@@ -19,3 +19,4 @@ jobs:
       - name: Deploy Application
         run: |
           echo "Deploying to ${{ inputs.environment }} environment"
+
