@@ -15,7 +15,7 @@ jobs:
             os: [ubuntu-latest, macos-latest]
             exclude:
               - nodejs_version: 18
-                operating_system: macos-latest
+                0s: macos-latest
         runs-on: ${{ matrix.os }}
         
         steps:
@@ -38,5 +38,5 @@ jobs:
           with:
             name: Mocha-Test-Result
             path: test-results.xml
-            
+
             
