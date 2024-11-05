@@ -5,34 +5,36 @@ on:
   push:
     branches:
       - main
-
+    
 jobs:
-  unit-testing:
-    name: Unit Testing
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup NodeJS Version
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14  # or 16 if using Dart Sass
-
-      - name: Install Build Tools
-        run: sudo apt-get install -y build-essential
-
-      - name: Clean npm Cache
-        run: npm cache clean --force
-
-      - name: Install Dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Unit Testing
-        run: npm test
+    unit-testing:
+        name: Unit Testing
+        strategy:
+          matrix: 
+            nodejs_version: [18, 19, 20]
+            os: [ubuntu-latest, macos-latest]
+            exclude:
+              - nodejs_version: 18
+                operating_system: macos-latest
+        runs-on: ${{ matrix.os }}
         
-      - name: Archive Test Result
-        uses: actions/upload-artifact@v3
-        with:
-          name: Mocha-Test-Result
-          path: test-results.xml
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Setup NodeJS Version - ${{ matrix.nodejs_version }}
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.nodejs_version }}
+    
+        - name: Install Dependencies
+          run: npm install
+    
+        - name: Unit Testing
+          run: npm test
+          
+        - name: Archive Test Result
+          uses: actions/upload-artifact@v4
+          with:
+            name: Mocha-Test-Result
+            path: test-results.xml
